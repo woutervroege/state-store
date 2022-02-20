@@ -5,7 +5,11 @@ db.on('*', (oldValue, key) => {
   window.localStorage.setItem(key, db[key]);
 })
 
-db.set('name', (name) => {
+// db.set('name', (name) => {
+//   return name.toLowerCase();
+// })
+
+db.get('name', (name) => {
   return name.toLowerCase();
 })
 

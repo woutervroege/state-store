@@ -1,5 +1,6 @@
 const data = {};
 const listeners = new Map();
+const getters = new Map();
 const setters = new Map();
 
 const on = (key, callback) => {
@@ -10,6 +11,11 @@ const on = (key, callback) => {
 const set = (key, callback) => {
   if(setters.has(key)) return;
   setters.set(key, callback);
+}
+
+const get = (key, callback) => {
+  if(getters.has(key)) return;
+  getters.set(key, callback);
 }
 
 const off = (key, callback) => {
@@ -25,9 +31,12 @@ const notify = (key, oldValue) => {
 const handler = {
   
   get(obj, key, receiver) {
+    const customGetter = getters.get(key);
+    if(customGetter) return customGetter?.(data[key]);
     if(key === 'on') return on;
     if(key === 'off') return off;
     if(key === 'set') return set;
+    if(key === 'get') return get;
     return Reflect.get(...arguments);
   },
 
