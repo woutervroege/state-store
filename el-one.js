@@ -3,18 +3,22 @@ import store from './store.js';
 export class ElOne extends HTMLElement {
 
   #name;
+  #nameChangedHandler = () => this.name = store.get('name');
 
   constructor() {
     super();
     this.name = store.get('name');
     this.attachShadow({mode: 'open'});
     this.render();
-    this.listener = this.storeChanged.bind(this);
-    store.listen(this.listener);
+    store.on('name', this.#nameChangedHandler);
   }
 
   disconnectedCallback() {
-    store.unlisten(this.listener);
+    store.off('name', this.#nameChangedHandler);
+  }
+
+  render() {
+    this.shadowRoot ? this.shadowRoot.innerHTML = /*html*/`<h1>Hello, ${this.name ?? ''}</h1>` : null;
   }
 
   get name() {
@@ -28,14 +32,6 @@ export class ElOne extends HTMLElement {
     this.#name = name;
     store.set('name', this.#name);
     this.render();
-  }
-
-  render() {
-    this.shadowRoot ? this.shadowRoot.innerHTML = /*html*/`<h1>Hello, ${this.name ?? ''}</h1>` : null;
-  }
-
-  storeChanged(key, oldValue) {
-    this[key] = store.get(key);
   }
 
 }

@@ -1,10 +1,10 @@
 class Store {
 
-  #listeners = new Set();
+  #listeners = new Map();
   #data = {};
 
   constructor() {
-    this.set('name', 'John Doe');
+    this.set('name', 'John');
   }
   
   set(key, value) {
@@ -18,20 +18,22 @@ class Store {
     return this.#data[key];
   }
 
-  listen(callback) {
-    this.#listeners.add(callback);
+  on(key, callback) {
+    this.#listeners[key] ??= new Set();
+    this.#listeners[key].add(callback);
   }
 
-  unlisten(callback) {
-    this.#listeners.delete(callback);
+  off(key, callback) {
+    this.#listeners[key].delete(callback);
+    console.info(this.#listeners[key]);
   }
 
   #notify(key, oldValue) {
-    this.#listeners.forEach(listener => this.#notifyOne(listener, key, oldValue));
+    this.#listeners[key]?.forEach(listener => this.#notifyOne(listener, oldValue));
   }
 
-  #notifyOne(listener, key, oldValue) {
-    listener?.(key, oldValue)
+  #notifyOne(listener, oldValue) {
+    listener?.(oldValue)
   }
   
 }
