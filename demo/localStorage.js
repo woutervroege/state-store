@@ -13,10 +13,15 @@ db.get('name', (name) => {
   return name.toLowerCase();
 })
 
-const persistentData = Object.entries(window.localStorage);
-for(let i in persistentData) {
-  const [key, value] = persistentData[i];
-  db[key] = value;
+const init = () => {
+  const persistentData = Object.entries(window.localStorage);
+  for(let i in persistentData) {
+    const [key, value] = persistentData[i];
+    db[key] = value;
+  }  
 }
+
+window.onstorage = init;
+init();
 
 export default db;
