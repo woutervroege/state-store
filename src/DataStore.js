@@ -8,14 +8,14 @@ const on = (key, callback) => {
   listeners[key].add(callback);
 }
 
-const set = (key, callback) => {
-  if(setters.has(key)) return;
-  setters.set(key, callback);
-}
-
 const get = (key, callback) => {
   if(getters.has(key)) return;
   getters.set(key, callback);
+}
+
+const set = (key, callback) => {
+  if(setters.has(key)) return;
+  setters.set(key, callback);
 }
 
 const off = (key, callback) => {
@@ -38,8 +38,8 @@ const getHandler = (obj, key, receiver) => {
   if(customGetter) return customGetter?.(data[key]);
   if(key === 'on') return on;
   if(key === 'off') return off;
-  if(key === 'set') return set;
   if(key === 'get') return get;
+  if(key === 'set') return set;
   return Reflect.get(obj, key, receiver);
 }
 
