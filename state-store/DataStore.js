@@ -29,29 +29,29 @@ const notify = (key, oldValue) => {
 }
 
 const handler = {
-  
-  get(obj, key, receiver) {
-    const customGetter = getters.get(key);
-    if(customGetter) return customGetter?.(data[key]);
-    if(key === 'on') return on;
-    if(key === 'off') return off;
-    if(key === 'set') return set;
-    if(key === 'get') return get;
-    return Reflect.get(...arguments);
-  },
-
-  set(obj, key, value) {
-    const customSetter = setters.get(key);
-    value = (customSetter) ? customSetter?.(value) : value;
-
-    const oldValue = data[key];
-    if(oldValue === value) return true;
-    Reflect.set(obj, key, value);
-    notify(key, oldValue);
-    return true;
-  }
-  
+  get() { return getHandler(...arguments); },
+  set() { return setHandler(...arguments); }
 };
+
+const getHandler = (obj, key, receiver) => {
+  const customGetter = getters.get(key);
+  if(customGetter) return customGetter?.(data[key]);
+  if(key === 'on') return on;
+  if(key === 'off') return off;
+  if(key === 'set') return set;
+  if(key === 'get') return get;
+  return Reflect.get(obj, key, receiver);
+}
+
+const setHandler = (obj, key, value) => {
+  const customSetter = setters.get(key);
+  value = (customSetter) ? customSetter?.(value) : value;
+  const oldValue = data[key];
+  if(oldValue === value) return true;
+  Reflect.set(obj, key, value);
+  notify(key, oldValue);
+  return true;
+}
 
 export class Store {
   constructor() {
