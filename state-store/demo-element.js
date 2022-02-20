@@ -7,10 +7,8 @@ export class DemoElement extends HTMLElement {
 
   constructor() {
     super();
-
     this.name = store.get('name');
     store.on('name', this.#nameChangedHandler);
-
     this.attachShadow({mode: 'open'});
     this.render();
   }
