@@ -1,4 +1,4 @@
-export const data = {};
+const data = {};
 const listeners = new Map();
 
 const on = (key, callback) => {
@@ -16,7 +16,7 @@ const notify = (key, oldValue) => {
   listeners['*']?.forEach(listener => listener?.(oldValue, key));
 }
 
-export const handler = {
+const handler = {
   
   get(obj, key) {
     if(key === 'on') return on;
@@ -33,3 +33,9 @@ export const handler = {
   }
   
 };
+
+export class Store {
+  constructor() {
+    return new Proxy(data, handler);
+  }
+}

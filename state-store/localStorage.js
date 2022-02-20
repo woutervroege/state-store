@@ -1,5 +1,5 @@
-import { data, handler } from './DataStore.js';
-const db = new Proxy(data, handler);
+import { Store } from './DataStore.js';
+const db = new Store();
 
 db.on('*', (oldValue, key) => {
   window.localStorage.setItem(key, db[key]);
