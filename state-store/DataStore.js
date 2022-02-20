@@ -1,9 +1,15 @@
 const data = {};
 const listeners = new Map();
+const setters = new Map();
 
 const on = (key, callback) => {
   listeners[key] ??= new Set();
   listeners[key].add(callback);
+}
+
+const set = (key, callback) => {
+  if(setters.has(key)) return;
+  setters.set(key, callback);
 }
 
 const off = (key, callback) => {
@@ -18,16 +24,20 @@ const notify = (key, oldValue) => {
 
 const handler = {
   
-  get(obj, key) {
+  get(obj, key, receiver) {
     if(key === 'on') return on;
     if(key === 'off') return off;
+    if(key === 'set') return set;
     return Reflect.get(...arguments);
   },
 
   set(obj, key, value) {
+    const customSetter = setters.get(key);
+    value = (customSetter) ? customSetter?.(value) : value;
+
     const oldValue = data[key];
     if(oldValue === value) return true;
-    Reflect.set(...arguments);
+    Reflect.set(obj, key, value);
     notify(key, oldValue);
     return true;
   }

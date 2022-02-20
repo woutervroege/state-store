@@ -5,6 +5,10 @@ db.on('*', (oldValue, key) => {
   window.localStorage.setItem(key, db[key]);
 })
 
+db.set('name', (name) => {
+  return name.toLowerCase();
+})
+
 const persistentData = Object.entries(window.localStorage);
 for(let i in persistentData) {
   const [key, value] = persistentData[i];
