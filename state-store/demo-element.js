@@ -1,16 +1,18 @@
 import store from './store.js';
 
-export class ElOne extends HTMLElement {
+export class DemoElement extends HTMLElement {
 
   #name;
   #nameChangedHandler = () => this.name = store.get('name');
 
   constructor() {
     super();
+
     this.name = store.get('name');
+    store.on('name', this.#nameChangedHandler);
+
     this.attachShadow({mode: 'open'});
     this.render();
-    store.on('name', this.#nameChangedHandler);
   }
 
   disconnectedCallback() {
@@ -26,9 +28,6 @@ export class ElOne extends HTMLElement {
   }
 
   set name(name) {
-    const oldValue = this.name;
-    if(oldValue === name) return;
-
     this.#name = name;
     store.set('name', this.#name);
     this.render();
@@ -36,4 +35,4 @@ export class ElOne extends HTMLElement {
 
 }
 
-window.customElements.define('element-one', ElOne);
+window.customElements.define('demo-element', DemoElement);

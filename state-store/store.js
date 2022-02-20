@@ -30,11 +30,7 @@ class Store {
   }
 
   #notify(key, oldValue) {
-    this.#listeners[key]?.forEach(listener => this.#notifyOne(listener, oldValue));
-  }
-
-  #notifyOne(listener, oldValue) {
-    listener?.(oldValue)
+    this.#listeners[key]?.forEach(listener => listener?.(oldValue));
   }
   
 }

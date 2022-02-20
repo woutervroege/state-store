@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script type="module" src="./demo-element.js"></script>
+</head>
+<body>
+
+  <demo-element id="demo"></demo-element>
+  <demo-element></demo-element>
+  <demo-element></demo-element>
+  <demo-element></demo-element>
+
+  <input id="input" placeholder="Type in a name...">
+
+  <script>
+    input.addEventListener('input', e => demo.name = e.target.value);
+  </script>
+  
+</body>
+</html>
