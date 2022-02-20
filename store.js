@@ -36,5 +36,5 @@ class Store {
   
 }
 
-export const store = Object.freeze(new Store());
+const store = Object.freeze(new Store());
 export default store;
