@@ -5,6 +5,7 @@ class Store {
 
   constructor() {
     this.set('name', 'John');
+    this.set('lastName', 'Doe');
   }
   
   set(key, value) {
