@@ -10,7 +10,7 @@ db.on('*', (oldValue, key) => {
 // })
 
 db.get('name', (name) => {
-  return name.toLowerCase();
+  return name?.toLowerCase();
 })
 
 const init = () => {
