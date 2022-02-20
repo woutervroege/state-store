@@ -1,20 +1,20 @@
-import store from './store.js';
+import db from './localStorage.js';
 
 export class DemoElement extends HTMLElement {
 
   #name;
-  #nameChangedHandler = () => this.name = store.name;
+  #nameChangedHandler = () => this.name = db.name;
 
   constructor() {
     super();
-    this.name = store.name;
-    store.on('name', this.#nameChangedHandler);
+    this.name = db.name;
+    db.on('name', this.#nameChangedHandler);
     this.attachShadow({mode: 'open'});
     this.render();
   }
 
   disconnectedCallback() {
-    store.off('name', this.#nameChangedHandler);
+    db.off('name', this.#nameChangedHandler);
   }
 
   render() {
@@ -27,7 +27,7 @@ export class DemoElement extends HTMLElement {
 
   set name(name) {
     this.#name = name;
-    store.name = this.name;
+    db.name = this.name;
     this.render();
   }
 

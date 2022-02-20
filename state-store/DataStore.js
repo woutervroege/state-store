@@ -1,4 +1,4 @@
-const data = {name: 'John'};
+export const data = {};
 const listeners = new Map();
 
 const on = (key, callback) => {
@@ -7,14 +7,16 @@ const on = (key, callback) => {
 }
 
 const off = (key, callback) => {
-  listeners[key].delete(callback);
+  listeners[key]?.delete(callback);
+  listeners['*']?.delete(callback);
 }
 
 const notify = (key, oldValue) => {
-  listeners[key]?.forEach(listener => listener?.(oldValue));
+  listeners[key]?.forEach(listener => listener?.(oldValue, key));
+  listeners['*']?.forEach(listener => listener?.(oldValue, key));
 }
 
-const handler = {
+export const handler = {
   
   get(obj, key) {
     if(key === 'on') return on;
@@ -31,6 +33,3 @@ const handler = {
   }
   
 };
-
-const store = new Proxy(data, handler);
-export default store;
