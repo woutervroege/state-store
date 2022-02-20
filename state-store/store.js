@@ -1,39 +1,36 @@
-class Store {
+const data = {name: 'John'};
+const listeners = new Map();
 
-  #listeners = new Map();
-  #data = {};
-
-  constructor() {
-    this.set('name', 'John');
-    this.set('lastName', 'Doe');
-  }
-  
-  set(key, value) {
-    const oldValue = this.#data[key];
-    if(oldValue ===  value) return;
-    this.#data[key] = value;
-    this.#notify(key, oldValue);
-  }
-
-  get(key) {
-    return this.#data[key];
-  }
-
-  on(key, callback) {
-    this.#listeners[key] ??= new Set();
-    this.#listeners[key].add(callback);
-  }
-
-  off(key, callback) {
-    this.#listeners[key].delete(callback);
-    console.info(this.#listeners[key]);
-  }
-
-  #notify(key, oldValue) {
-    this.#listeners[key]?.forEach(listener => listener?.(oldValue));
-  }
-  
+const on = (key, callback) => {
+  listeners[key] ??= new Set();
+  listeners[key].add(callback);
 }
 
-const store = Object.freeze(new Store());
+const off = (key, callback) => {
+  listeners[key].delete(callback);
+}
+
+const notify = (key, oldValue) => {
+  listeners[key]?.forEach(listener => listener?.(oldValue));
+}
+
+const handler = {
+  
+  get(obj, key) {
+    if(key === 'on') return on;
+    if(key === 'off') return off;
+    return Reflect.get(...arguments);
+  },
+
+  set(obj, key, value) {
+    const oldValue = data[key];
+    if(oldValue === value) return true;
+    Reflect.set(...arguments);
+    notify(key, oldValue);
+    return true;
+  }
+  
+};
+
+const store = new Proxy(data, handler);
 export default store;

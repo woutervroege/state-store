@@ -3,11 +3,11 @@ import store from './store.js';
 export class DemoElement extends HTMLElement {
 
   #name;
-  #nameChangedHandler = () => this.name = store.get('name');
+  #nameChangedHandler = () => this.name = store.name;
 
   constructor() {
     super();
-    this.name = store.get('name');
+    this.name = store.name;
     store.on('name', this.#nameChangedHandler);
     this.attachShadow({mode: 'open'});
     this.render();
@@ -27,7 +27,7 @@ export class DemoElement extends HTMLElement {
 
   set name(name) {
     this.#name = name;
-    store.set('name', this.#name);
+    store.name = this.name;
     this.render();
   }
 
