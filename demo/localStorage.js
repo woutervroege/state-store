@@ -1,4 +1,4 @@
-import { Store } from './DataStore.js';
+import { Store } from '../src/DataStore.js';
 const db = new Store();
 
 db.on('*', (oldValue, key) => {
