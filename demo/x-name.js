@@ -1,13 +1,12 @@
 import db from './db.js';
 
-export class DemoElement extends HTMLElement {
+export class XName extends HTMLElement {
 
   #nameChangedHandler = () => this.name = db.name;
 
   constructor() {
     super();
     this.userCount = 2;
-    db.on(/users/, () => console.info('users changed'));
     db.on('name', this.#nameChangedHandler);
     this.attachShadow({mode: 'open'});
     this.render();
@@ -29,12 +28,7 @@ export class DemoElement extends HTMLElement {
     db.name = name;
     this.render();
   }
-  
-  addUser(user) {
-    this.userCount++;
-    db[`users/${this.userCount}`] = user;
-  }
 
 }
 
-window.customElements.define('demo-element', DemoElement);
+window.customElements.define('x-name', XName);

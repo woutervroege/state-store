@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script type="module" src="./x-users.js"></script>
+</head>
+<body>
+
+  <script type="module">
+    import db from './db.js';
+    input.addEventListener('change', e => {
+        demo.addUser(e.target.value);
+        e.target.value = '';
+    });
+  </script>
+  
+  <x-users id="demo"></x-users>
+  <input id="input" placeholder="Type in a name...">
+
+</body>
+</html>

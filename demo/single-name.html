@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script type="module" src="./x-name.js"></script>
+</head>
+<body>
+
+  <script type="module">
+    import db from './db.js';
+    input.value = db.name;
+    input.addEventListener('input', e => demo.name = e.target.value);
+  </script>
+  
+  <x-name id="demo"></x-name>
+  <x-name></x-name>
+  <x-name></x-name>
+
+  <input id="input" placeholder="Type in a name...">
+
+</body>
+</html>
