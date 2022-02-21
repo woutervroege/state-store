@@ -49,8 +49,12 @@ const getHandler = (obj, key, receiver) => {
 
 const setHandler = (obj, key, value) => {
 
-  const validated = validators.get(key)?.(value) ?? true;
-  if(validated === false) return true;
+  const keyValidator = validators.get(key)?.(value) ?? true;
+  if(keyValidator === false) return true;
+
+  const patterns = [...validators.keys()].filter(key => typeof key === 'object');
+  const patternValidators = patterns.map(pattern => validators.get(pattern)?.(value) ?? true);
+  if(patternValidators.includes(false)) return true;
 
   const oldValue = data[key];
   if(oldValue === value) return true;

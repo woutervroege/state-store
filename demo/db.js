@@ -6,4 +6,10 @@ db.validate('name', name => {
   return false;
 })
 
+db.validate(/na/, value => {
+  if(value.includes('e')) return true;
+  console.warn('Value should contain a letter e');
+  return false;
+})
+
 export default db;
