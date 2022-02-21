@@ -2,16 +2,16 @@ const data = {};
 const listeners = new Map();
 const validators = new Map();
 
-const on = (key, callback) => {
+const addListener = (key, callback) => {
   if(listeners.has(key) === false) listeners.set(key, new Set());
   listeners.get(key).add(callback);
 }
 
-const off = (key, callback) => {
+const removeListener = (key, callback) => {
   listeners.get(key)?.delete(callback);
 }
 
-const validate = (key, callback) => {
+const addValidator = (key, callback) => {
   if(validators.has(key)) return;
   validators.set(key, callback);
 }
@@ -24,13 +24,13 @@ const get = (pattern) => {
 }
 
 const notify = (key, oldValue) => {
-  notifyKeyListeners(key, oldValue);
+  notifyListeners(key, oldValue);
   listeners.get(key)?.forEach(listener => listener?.(oldValue, key));
   const patterns = [...listeners.keys()].filter(key => typeof key === 'object');
-  patterns.forEach(pattern => key.match(pattern) && notifyKeyListeners(key, oldValue, pattern))
+  patterns.forEach(pattern => key.match(pattern) && notifyListeners(key, oldValue, pattern))
 }
 
-const notifyKeyListeners = (key, oldValue, pattern) => {
+const notifyListeners = (key, oldValue, pattern) => {
   listeners.get(pattern || key)?.forEach(listener => listener?.(oldValue, key));
 }
 
@@ -40,9 +40,9 @@ const handler = {
 };
 
 const getHandler = (obj, key, receiver) => {
-  if(key === 'on') return on;
-  if(key === 'off') return off;
-  if(key === 'validate') return validate;
+  if(key === 'on') return addListener;
+  if(key === 'off') return removeListener;
+  if(key === 'validate') return addValidator;
   if(key === 'get') return get;
   return Reflect.get(obj, key, receiver);
 }
