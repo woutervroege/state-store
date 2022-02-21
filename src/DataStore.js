@@ -49,7 +49,7 @@ const getHandler = (obj, key, receiver) => {
 
 const setHandler = (obj, key, value) => {
 
-  const validated = validators.get(key)?.(value);
+  const validated = validators.get(key)?.(value) ?? true;
   if(validated === false) return true;
 
   const oldValue = data[key];
