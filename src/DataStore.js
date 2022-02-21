@@ -1,6 +1,6 @@
 const data = {};
 const listeners = new Map();
-const setters = new Map();
+const validators = new Map();
 
 const on = (key, callback) => {
   if(listeners.has(key) === false) listeners.set(key, new Set());
@@ -11,9 +11,9 @@ const off = (key, callback) => {
   listeners.get(key)?.delete(callback);
 }
 
-const set = (key, callback) => {
-  if(setters.has(key)) return;
-  setters.set(key, callback);
+const validate = (key, callback) => {
+  if(validators.has(key)) return;
+  validators.set(key, callback);
 }
 
 const get = (pattern) => {
@@ -42,14 +42,16 @@ const handler = {
 const getHandler = (obj, key, receiver) => {
   if(key === 'on') return on;
   if(key === 'off') return off;
-  if(key === 'set') return set;
+  if(key === 'validate') return validate;
   if(key === 'get') return get;
   return Reflect.get(obj, key, receiver);
 }
 
 const setHandler = (obj, key, value) => {
-  const customSetter = setters.get(key);
-  value = (customSetter) ? customSetter?.(value) : value;
+
+  const validated = validators.get(key)?.(value);
+  if(validated === false) return true;
+
   const oldValue = data[key];
   if(oldValue === value) return true;
   Reflect.set(obj, key, value);
