@@ -1,4 +1,4 @@
-import { db } from '../src/LocalStorage.js';
+import { db } from '../src/impl/localStorage.js';
 
 db.validate('name', name => {
   if( name.match(/.{3,}/) ) return true;

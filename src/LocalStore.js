@@ -1,11 +1,12 @@
-import { Store } from '../src/DataStore.js';
+import { Store } from './Store.js';
 
-export class LocalStorageBase {
+export class LocalStore {
 
   #storageEngine;
   #db;
   
   constructor(storageEngine) {
+    
     this.#db = new Store();
     this.#storageEngine = storageEngine;
     
@@ -13,14 +14,14 @@ export class LocalStorageBase {
       window[this.#storageEngine].setItem(key, this.#db[key]);
     })
 
-    window.onstorage = () => this.#init();
-    this.#init();
+    window.onstorage = () => this.#pullDataFromStorageEngine();
+    this.#pullDataFromStorageEngine();
 
     return this.#db;
 
   }
 
-  #init() {
+  #pullDataFromStorageEngine() {
     const persistentData = Object.entries(window[this.#storageEngine]);
     for(let i in persistentData) {
       const [key, value] = persistentData[i];
