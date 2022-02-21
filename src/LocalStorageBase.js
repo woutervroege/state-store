@@ -9,7 +9,7 @@ export class LocalStorageBase {
     this.#db = new Store();
     this.#storageEngine = storageEngine;
     
-    this.#db.on('*', (oldValue, key) => {
+    this.#db.on(/.*/, (oldValue, key) => {
       window[this.#storageEngine].setItem(key, this.#db[key]);
     })
 

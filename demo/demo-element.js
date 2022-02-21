@@ -6,9 +6,15 @@ export class DemoElement extends HTMLElement {
 
   constructor() {
     super();
+    this.userCount = 2;
+    db.on(/users/, () => console.info('users changed'));
     db.on('name', this.#nameChangedHandler);
     this.attachShadow({mode: 'open'});
     this.render();
+  }
+
+  get db() {
+    return db;
   }
 
   disconnectedCallback() {
@@ -22,6 +28,11 @@ export class DemoElement extends HTMLElement {
   set name(name) {
     db.name = name;
     this.render();
+  }
+  
+  addUser(user) {
+    this.userCount++;
+    db[`users/${this.userCount}`] = user;
   }
 
 }

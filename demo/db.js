@@ -1,11 +1,7 @@
-import { db } from '../src/SessionStorage.js';
+import { db } from '../src/LocalStorage.js';
 
-// db.set('name', (name) => {
-//   return name.toLowerCase();
-// })
-
-db.get('name', (name) => {
-  return name?.toLowerCase();
+db.set('name', (name) => {
+  return name.toLowerCase();
 })
 
 export default db;

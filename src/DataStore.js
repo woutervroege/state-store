@@ -1,16 +1,14 @@
 const data = {};
 const listeners = new Map();
-const getters = new Map();
 const setters = new Map();
 
 const on = (key, callback) => {
-  listeners[key] ??= new Set();
-  listeners[key].add(callback);
+  if(listeners.has(key) === false) listeners.set(key, new Set());
+  listeners.get(key).add(callback);
 }
 
-const get = (key, callback) => {
-  if(getters.has(key)) return;
-  getters.set(key, callback);
+const off = (key, callback) => {
+  listeners.get(key)?.delete(callback);
 }
 
 const set = (key, callback) => {
@@ -18,14 +16,22 @@ const set = (key, callback) => {
   setters.set(key, callback);
 }
 
-const off = (key, callback) => {
-  listeners[key]?.delete(callback);
-  listeners['*']?.delete(callback);
+const find = (pattern) => {
+  const keys = Object.keys(data).filter(key => key.match(pattern));
+  const results = {};
+  keys.forEach(key => results[key] = data[key]);
+  return results;
 }
 
 const notify = (key, oldValue) => {
-  listeners[key]?.forEach(listener => listener?.(oldValue, key));
-  listeners['*']?.forEach(listener => listener?.(oldValue, key));
+  notifyKeyListeners(key, oldValue);
+  listeners.get(key)?.forEach(listener => listener?.(oldValue, key));
+  const patterns = [...listeners.keys()].filter(key => typeof key === 'object');
+  patterns.forEach(pattern => key.match(pattern) && notifyKeyListeners(key, oldValue, pattern))
+}
+
+const notifyKeyListeners = (key, oldValue, pattern) => {
+  listeners.get(pattern || key)?.forEach(listener => listener?.(oldValue, key));
 }
 
 const handler = {
@@ -34,12 +40,10 @@ const handler = {
 };
 
 const getHandler = (obj, key, receiver) => {
-  const customGetter = getters.get(key);
-  if(customGetter) return customGetter?.(data[key]);
   if(key === 'on') return on;
   if(key === 'off') return off;
-  if(key === 'get') return get;
   if(key === 'set') return set;
+  if(key === 'find') return find;
   return Reflect.get(obj, key, receiver);
 }
 
