@@ -16,7 +16,7 @@ const set = (key, callback) => {
   setters.set(key, callback);
 }
 
-const find = (pattern) => {
+const get = (pattern) => {
   const keys = Object.keys(data).filter(key => key.match(pattern));
   const results = {};
   keys.forEach(key => results[key] = data[key]);
@@ -43,7 +43,7 @@ const getHandler = (obj, key, receiver) => {
   if(key === 'on') return on;
   if(key === 'off') return off;
   if(key === 'set') return set;
-  if(key === 'find') return find;
+  if(key === 'get') return get;
   return Reflect.get(obj, key, receiver);
 }
 
